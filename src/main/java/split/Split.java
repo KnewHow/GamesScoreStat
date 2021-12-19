@@ -1,3 +1,5 @@
+package split;
+
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -13,10 +15,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Combine {
+public class Split {
     public static void main(String[] args) throws Exception {
-        String path = "src/main/resources/excels/HW2.xls";
-        String targetPath = "src/main/resources/excels/HW2_result.xls";
+        String path = "src/main/resources/split/HW2_Plus.xls";
+        String targetPath = "src/main/resources/split/HW2_Plus_result.xls";
         List<Student> studens = getStudentsFromFile(path);
         //getTargetData(studens.get(2));
         List<TargetData> targetDatas = getTargetDatas(studens);
@@ -42,6 +44,7 @@ public class Combine {
                 s.setFirstName(row.get(1));
                 s.setFamilyName(row.get(2));
                 s.setComment(row.get(3));
+                //System.out.println("firstName:" + s.getFirstName());
                 s.setScore(Integer.parseInt(row.get(4)));
                 students.add(s);
             }
@@ -102,7 +105,11 @@ public class Combine {
         data.setFamilyName(student.getFamilyName());
         data.setFirstName(student.getFirstName());
         data.setTotal(student.getScore());
-        int errorRecords = 0;
+        if(data.getTotal() == 0) {
+            data.setBase(0);
+            data.setImprove(0);
+            return data;
+        }
         List<Integer> scores = getBaseAndImprove(student.getComment());
         if(scores.size() == 2 && (scores.get(0) + scores.get(1) == data.getTotal())) {
             data.setBase(scores.get(0));
