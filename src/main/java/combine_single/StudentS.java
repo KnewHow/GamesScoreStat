@@ -1,4 +1,4 @@
-package combine;
+package combine_single;
 
 public class StudentS {
     String uid;
