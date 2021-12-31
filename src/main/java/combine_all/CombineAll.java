@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class CombineAll {
@@ -136,6 +137,21 @@ public class CombineAll {
         row.createCell(cellId++).setCellValue("base_total");
         row.createCell(cellId++).setCellValue("bonus_total");
         row.createCell(cellId++).setCellValue("total");
+        row.createCell(cellId++).setCellValue("weight_base_total");
+        row.createCell(cellId++).setCellValue("weight_bonus_total");
+        row.createCell(cellId++).setCellValue("weight_total");
+        List<Double> weights = new ArrayList<Double>();
+        weights.add(0.11);
+        weights.add(0.11);
+        weights.add(0.11);
+        weights.add(0.11);
+        weights.add(0.11);
+        weights.add(0.11);
+        weights.add(0.08);
+        weights.add(0.11);
+        weights.add(0.15);
+
+        DecimalFormat df = new DecimalFormat("0.00");
 
 
         for(int i = 0; i < results.size(); ++i) {
@@ -147,11 +163,14 @@ public class CombineAll {
 
             int base_total = 0;
             int bonus_total = 0;
+            double weight_base_total = 0.0;
+            double weight_bonus_total = 0.0;
             for(int j = 1; j <= HW_TOTAL_TIMES; ++j) {
                 if(j == 5 || j == 8 || j == 9) {
                     int base = rowData.get(index);
                     row.createCell(cellId++).setCellValue(base);
                     base_total += base;
+                    weight_base_total += weights.get(j - 1) * base;
                     index += 2;
                 } else {
                     int base = rowData.get(index++);
@@ -160,12 +179,18 @@ public class CombineAll {
                     row.createCell(cellId++).setCellValue(bonus);
                     base_total += base;
                     bonus_total += bonus;
+                    weight_base_total += weights.get(j - 1) * base;
+                    weight_bonus_total += weights.get(j - 1) * bonus;
                 }
             }
             int total = base_total + bonus_total;
+            double weight_total = weight_base_total + weight_bonus_total;
             row.createCell(cellId++).setCellValue(base_total);
             row.createCell(cellId++).setCellValue(bonus_total);
             row.createCell(cellId++).setCellValue(total);
+            row.createCell(cellId++).setCellValue(df.format(weight_base_total));
+            row.createCell(cellId++).setCellValue(df.format(weight_bonus_total));
+            row.createCell(cellId++).setCellValue(df.format(weight_total));
 
         }
 
